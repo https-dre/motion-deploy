@@ -14,13 +14,19 @@
 - Receive and validate GitHub Webhooks (push, pull request, release)
 - Orchestrate configurable CI/CD pipelines
 - Automatic Docker container build and management
-- Automated, synchronized deployments across multiple environments (production, staging)
+
+## Planned Features
+
+The following features are planned for future releases but are not yet implemented:
+
 - Rollback mechanisms in case of failures
+
 - Secure communication via TLS/HTTPS and access authentication
-- Scalable for multiple repositories and concurrent deployments
+
+- Scalability for multiple repositories and concurrent deployments
+
 - Detailed monitoring with logs and notifications
 
----
 
 ## Requirements
 
