@@ -1,0 +1,5 @@
+*.json
+auto-deploy
+.vscode
+*.env*
+services/
