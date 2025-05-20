@@ -1,5 +1,10 @@
 # Motion
 
+![Maintainer](https://img.shields.io/badge/maintainer-https--dre-green)
+[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](https://github.com/gomods/athens)
+[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://https://docker.com/)
+
+
 **Motion Deploy** is a Docker-based deployment automation tool leveraging GitHub Webhooks to orchestrate continuous delivery pipelines, manage containerized environments, and trigger automated deployments in response to repository events.
 
 ---
