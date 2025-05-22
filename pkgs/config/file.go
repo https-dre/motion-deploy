@@ -1,14 +1,23 @@
 package config
 
 import (
-	"motion/pkgs/gitclient"
 	"encoding/json"
 	"fmt"
 	"log"
+	"motion/core"
+	"motion/pkgs/gitclient"
 	"os"
 
 	"github.com/google/go-github/v55/github"
 )
+
+type RepoConfig struct {
+	Name   string   `json:"name"`
+	Branch string   `json:"branch"`
+	Path   string   `json:"path"`
+	Ports  [2]int   `json:"ports"`
+	Events []string `json:"events"`
+}
 
 type Config struct {
 	Secret      string                `json:"secret"`
@@ -18,6 +27,9 @@ type Config struct {
 	GhToken     string `json:"GITHUB_TOKEN"`
 	UserName    string `json:"username"`
 }
+
+var General Config
+var Engine core.Instance
 
 func (c *Config) Init() {
 	// Carrega config.json
@@ -43,16 +55,6 @@ func (c *Config) Init() {
 		c.Save()
 	}
 
-}
-
-var General Config
-
-type RepoConfig struct {
-	Name   string   `json:"name"`
-	Branch string   `json:"branch"`
-	Path   string   `json:"path"`
-	Ports  [2]int   `json:"ports"`
-	Events []string `json:"events"`
 }
 
 func (c *Config) InitGitClient() {
