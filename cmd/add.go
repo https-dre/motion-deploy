@@ -63,25 +63,30 @@ var add = &cobra.Command{
 
 		path := filepath.Join("./services", reponame)
 
-		fmt.Printf("Adicionando repositório: %s/%s\n", config.General.UserName, reponame)
+		fmt.Printf("Adding Repository: %s/%s\n", config.General.UserName, reponame)
 
 		new_repo := config.RepoConfig{
-			Name:  reponame,
-			Ports: ports_selected,
+			Name:   reponame,
+			Ports:  ports_selected,
 			Branch: *branch_selected,
 			Events: []string{"push"},
-			Path: path,
+			Path:   path,
 		}
 
-		
-		repo.DownloadRepository(repository, "./service")
+		repo.DownloadRepository(repository, "./services")
 		config.General.AddRepo(new_repo)
 		config.General.Save()
-		fmt.Println("Repositório baixado com sucesso!")
+		fmt.Println("Repository downloaded!")
+		fmt.Println("Setting project in Docker")
+
+		if err := config.Engine.BuildAndRunService(new_repo.Path, new_repo.Name, new_repo.Name); err != nil {
+			fmt.Println("Falha ao buildar e rodar o projeto")
+			fmt.Println(err)
+		}
 	},
 }
 
 func init() {
-	add.Flags().StringVar(&ports, "ports", "", "Mapeamento de Portas")
-	add.Flags().StringVar(&branch, "branch", "", "Branch selecionada para deploy")
+	add.Flags().StringVar(&ports, "ports", "", "Define port mapping")
+	add.Flags().StringVar(&branch, "branch", "", "Branch selected")
 }
