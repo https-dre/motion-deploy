@@ -2,11 +2,18 @@ package core
 
 import "github.com/docker/docker/client"
 
-
 type DockerClient = *client.Client
 
-type CoreInstance struct {
-	Client DockerClient
+type Instance struct {
+	Client       DockerClient
+	Applications []CoreApplication
+}
+
+type CoreApplication struct {
+	CoreId  string
+	Name    string
+	Env     []string
+	ImageId string
 }
 
 func NewDockerClient() DockerClient {
@@ -17,10 +24,14 @@ func NewDockerClient() DockerClient {
 	return cli
 }
 
-func NewCore() *CoreInstance {
+func NewCore() *Instance {
 	cli := NewDockerClient()
 
-	return &CoreInstance{
+	return &Instance{
 		Client: cli,
 	}
+}
+
+func (c *Instance) ListApplications() []CoreApplication {
+	return []CoreApplication{}
 }
