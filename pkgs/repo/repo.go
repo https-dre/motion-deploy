@@ -32,12 +32,12 @@ func FindRepo(reponame string) (*github.Repository, error) {
 
 func DownloadRepository(repo *github.Repository, path string) error {
 	os.MkdirAll(path, os.ModePerm)
-
+	
 	if repo != nil {
 		reponame := repo.GetName()
 		cloneUrl := repo.GetCloneURL()
 		fmt.Printf("Clonando repositório %s em %s\n", cloneUrl, path)
-		if err := cloneRepo(cloneUrl, path); err != nil {
+		if err := cloneRepo(cloneUrl, fmt.Sprintf("%s/%s", path, reponame)); err != nil {
 			log.Printf("Erro ao clonar %s: %v", reponame, err)
 		}
 		return nil
