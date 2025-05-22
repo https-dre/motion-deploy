@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"motion/core"
+	"motion/pkgs/config"
 	"os"
 
-	"motion/pkgs/config"
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +15,7 @@ var rootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		config.General.Init()
 		config.General.InitGitClient()
+		config.Engine = core.NewCore()
 	},
 }
 
