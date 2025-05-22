@@ -1,9 +1,16 @@
 package cmd
 
 import (
-	"motion/routes"
-	"motion/pkgs/config"
+	"context"
+	"fmt"
 	"log"
+	"motion/pkgs/config"
+	"motion/routes"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -15,12 +22,34 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		gin.SetMode(gin.ReleaseMode)
 
-		r := gin.Default()
-		r.POST("/webhook", routes.HandleWebhook)
+		router := gin.Default()
+		router.POST("/webhook", routes.HandleWebhook)
 
-		log.Println("Servidor ouvindo na porta", config.General.CurrentPort)
-		if err := r.Run(":" + config.General.CurrentPort); err != nil {
-			log.Fatal("Erro ao iniciar servidor:", err)
+		srv := &http.Server{
+			Addr:    ":" + config.General.CurrentPort,
+			Handler: router,
+		}
+
+		sigs := make(chan os.Signal, 1)
+
+		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+		go func() {
+			sig := <-sigs
+			log.Println("Signal received: ", sig)
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+
+			if err := srv.Shutdown(ctx); err != nil {
+				log.Fatal("Error: ", err)
+			}
+
+			fmt.Println("Server stopped!")
+		}()
+
+		log.Println("Server listening in port: ", config.General.CurrentPort)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatal("Error while starting server:", err)
 		}
 	},
 }
