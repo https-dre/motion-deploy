@@ -1,6 +1,10 @@
 package core
 
-import "github.com/docker/docker/client"
+import (
+	"fmt"
+
+	"github.com/docker/docker/client"
+)
 
 type DockerClient = *client.Client
 
@@ -17,8 +21,9 @@ type CoreApplication struct {
 }
 
 func NewDockerClient() DockerClient {
-	cli, err := client.NewClientWithOpts(client.FromEnv)
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
+		fmt.Println("An error ocurred while create the docker integration")
 		panic(err)
 	}
 	return cli
