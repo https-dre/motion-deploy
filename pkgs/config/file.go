@@ -29,7 +29,7 @@ type Config struct {
 }
 
 var General Config
-var Engine core.Instance
+var Engine *core.Instance
 
 func (c *Config) Init() {
 	// Carrega config.json
