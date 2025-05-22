@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var startCmd = &cobra.Command{
-	Use:   "start",
+var serveCmd = &cobra.Command{
+	Use:   "serve",
 	Short: "Inicia o servidor HTTP",
 	Run: func(cmd *cobra.Command, args []string) {
 		gin.SetMode(gin.ReleaseMode)
