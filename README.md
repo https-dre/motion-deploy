@@ -2,8 +2,9 @@
 
 ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
-![Maintainer](https://img.shields.io/badge/maintainer-https--dre-green)
+![Maintainer](https://img.shields.io/badge/maintainer-https--dre-blue)
 
 **Motion Deploy** is a Docker-based deployment automation tool leveraging GitHub Webhooks to orchestrate continuous delivery pipelines, manage containerized environments, and trigger automated deployments in response to repository events.
 
