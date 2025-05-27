@@ -29,7 +29,7 @@ func HandleWebhook(c *gin.Context) {
 	}
 
 	// Verifica assinatura
-	if !verifySignature(signature, body, []byte(config.General.Secret)) {
+	if !verifySignature(signature, body, []byte(config.All.Secret)) {
 		c.String(http.StatusForbidden, "Assinatura inválida")
 		return
 	}
@@ -49,7 +49,7 @@ func HandleWebhook(c *gin.Context) {
 	repo := payload.Repository.FullName
 	branch := strings.TrimPrefix(payload.Ref, "refs/heads/")
 
-	if repoConf, ok := config.General.Repos[repo]; ok && repoConf.Branch == branch {
+	if repoConf, ok := config.All.Repos[repo]; ok && repoConf.Branch == branch {
 		go deploy(repoConf)
 	}
 

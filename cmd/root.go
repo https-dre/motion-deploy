@@ -13,8 +13,8 @@ var rootCmd = &cobra.Command{
 	Use:   "motion",
 	Short: "Ferramenta para deploy automatizado via webhook",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		config.General.Init()
-		config.General.InitGitClient()
+		config.Init()
+		config.InitGitClient()
 		config.Engine = core.NewCore()
 	},
 }

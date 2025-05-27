@@ -26,7 +26,7 @@ var serveCmd = &cobra.Command{
 		router.POST("/webhook", routes.HandleWebhook)
 
 		srv := &http.Server{
-			Addr:    ":" + config.General.CurrentPort,
+			Addr:    ":" + config.All.CurrentPort,
 			Handler: router,
 		}
 
@@ -47,7 +47,7 @@ var serveCmd = &cobra.Command{
 			fmt.Println("Server stopped!")
 		}()
 
-		log.Println("Server listening in port: ", config.General.CurrentPort)
+		log.Println("Server listening in port: ", config.All.CurrentPort)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal("Error while starting server:", err)
 		}

@@ -29,7 +29,7 @@ func input(prompt string) string {
 }
 
 func githubProfileExists(username string) (bool, error) {
-	client := config.General.GhClient
+	client := config.All.GhClient
 
 	_, resp, err := client.Users.Get(context.Background(), username)
 	if err != nil {
@@ -129,12 +129,13 @@ var initCmd = &cobra.Command{
 
 		port := input("Choose one port for motion to run [default: 5500]>")
 
-		config.General.UserName = username
-		config.General.GhToken = token
-		config.General.CurrentPort = port
-		config.General.Save()
+		config.All.UserName = username
+		config.All.GhToken = token
+		config.All.CurrentPort = port
+		config.InitServicesConfig()
+		config.Save()
 
 		color.Blue("\nMotion configured!")
-		fmt.Println("All motion configs was saved in 'config.json' file.")
+		fmt.Println("All motion configs was saved in 'motion.yaml' file.")
 	},
 }

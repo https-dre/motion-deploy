@@ -25,7 +25,7 @@ var add = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 		reponame := args[0]
-		ports_selected := [2]int{0, 2}
+		ports_selected := [2]int{0, 0}
 		repository, err := repo.FindRepo(reponame)
 
 		if err != nil {
@@ -63,7 +63,7 @@ var add = &cobra.Command{
 
 		path := filepath.Join("./services", reponame)
 
-		fmt.Printf("Adding Repository: %s/%s\n", config.General.UserName, reponame)
+		fmt.Printf("Adding Repository: %s/%s\n", config.All.UserName, reponame)
 
 		new_repo := config.RepoConfig{
 			Name:   reponame,
@@ -74,8 +74,8 @@ var add = &cobra.Command{
 		}
 
 		repo.DownloadRepository(repository, "./services")
-		config.General.AddRepo(new_repo)
-		config.General.Save()
+		config.AddRepo(new_repo)
+		config.SaveRepos()
 		fmt.Println("Repository downloaded!")
 		fmt.Println("Setting project in Docker")
 

@@ -19,19 +19,19 @@ var configCmd = &cobra.Command{
 	Short: "Define configurações específicas do sistema",
 	Run: func(cmd *cobra.Command, args []string) {
 		if username != "" {
-			config.General.UserName = username
+			config.All.UserName = username
 			fmt.Println("Username configurado para:", username)
 		}
 		if gitToken != "" {
-			config.General.GhToken = gitToken
+			config.All.GhToken = gitToken
 			fmt.Println("Token do Git configurado.")
 		}
 		if port != "" {
-			config.General.CurrentPort = port
+			config.All.CurrentPort = port
 			fmt.Println("Porta configurada para:", port)
 		}
 		if serverSecret != "" {
-			config.General.Secret = serverSecret
+			config.All.Secret = serverSecret
 			fmt.Println("Segredo do servidor configurado.")
 		}
 
@@ -39,7 +39,7 @@ var configCmd = &cobra.Command{
 			fmt.Println("Nenhuma opção fornecida. Use --help para ver as opções disponíveis.")
 		}
 
-		config.General.Save()
+		config.Save()
 	},
 }
 
