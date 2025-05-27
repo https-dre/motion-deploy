@@ -1,14 +1,13 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"motion/core"
 	"motion/pkgs/gitclient"
-	"os"
 
 	"github.com/google/go-github/v55/github"
+	"github.com/spf13/viper"
 )
 
 type RepoConfig struct {
@@ -20,71 +19,79 @@ type RepoConfig struct {
 }
 
 type Config struct {
-	Secret      string                `json:"secret"`
-	CurrentPort string                `json:"current_port"`
-	Repos       map[string]RepoConfig `json:"repos"`
-	GhClient    *github.Client
-	GhToken     string `json:"GITHUB_TOKEN"`
-	UserName    string `json:"username"`
+	Secret      string                `mapstructure:"secret"`
+	CurrentPort string                `mapstructure:"current_port"`
+	Repos       map[string]RepoConfig `mapstructure:"repos"`
+	GhToken     string                `mapstructure:"github_token"`
+	UserName    string                `mapstructure:"username"`
+	GhClient    *github.Client        `mapstructure:"-"`
 }
 
-var General Config
+var All Config
 var Engine *core.Instance
+var Repos []RepoConfig
 
-func (c *Config) Init() {
-	// Carrega config.json
-	_, err := os.Stat("config.json")
+func Init() {
+	// Configuração principal (motion.yaml)
+	viper.SetConfigName("motion")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
 
-	if err == nil { /* arquivo existe */
-		data, err := os.ReadFile("config.json")
-		if err != nil {
-			log.Fatal("Erro ao ler config.json:", err)
-		}
+	viper.SetDefault("current_port", "5500")
+	viper.SetDefault("secret", "Undefined")
+	viper.SetDefault("username", "Undefined")
+	viper.SetDefault("github_token", "Undefined")
 
-		if err := json.Unmarshal(data, c); err != nil {
-			log.Fatal("Erro ao parsear config:", err)
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			fmt.Println("Arquivo de Configuração não encontrado. Criando motion.yaml")
+			err := viper.SafeWriteConfigAs("motion.yaml")
+			if err != nil {
+				log.Fatalf("Erro ao criar motion.yaml: %v", err)
+			}
+		} else {
+			log.Fatalf("Erro ao ler motion.yaml: %v", err)
 		}
 	}
 
-	if os.IsNotExist(err) {
-		fmt.Println("Arquivo de Configuração não existe! Criando config.json")
-		c.CurrentPort = "5500"
-		c.Secret = "Undefined"
-		c.UserName = "Undefined"
-		c.GhToken = "Undefined"
-		c.Save()
+	if err := viper.Unmarshal(&All); err != nil {
+		log.Fatalf("Erro ao carregar config para struct: %v", err)
 	}
 
+	// Carrega os repositórios do services.yaml
+	LoadRepos()
 }
 
-func (c *Config) InitGitClient() {
-	if c.GhToken == "" {
-		fmt.Println("GITHUB TOKEN INVÁLIDO")
+func InitGitClient() {
+	if All.GhToken == "" || All.GhToken == "Undefined" {
+		fmt.Println("Invalid GitHub token!")
 		return
 	}
-	c.GhClient = gitclient.NewGitClient(General.GhToken)
+	All.GhClient = gitclient.NewGitClient(All.GhToken)
 }
 
-func (c *Config) Save() error {
-	config_json, err := json.MarshalIndent(c, "", "	")
+func Save() error {
+	viper.Set("current_port", All.CurrentPort)
+	viper.Set("secret", All.Secret)
+	viper.Set("username", All.UserName)
+	viper.Set("github_token", All.GhToken)
 
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile("config.json", config_json, 0644)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return viper.WriteConfig()
 }
 
-func (c *Config) AddRepo(repo RepoConfig) {
-	if c.Repos == nil {
-		c.Repos = make(map[string]RepoConfig)
-	}
+func AddRepo(repo RepoConfig) {
+	Repos = append(Repos, repo)
+	
+	SaveRepos()
+}
 
-	c.Repos[repo.Name] = repo
+func RemoveRepo(repoName string) {
+	for i, repo := range Repos {
+		if repo.Name == repoName {
+			Repos = append(Repos[:i], Repos[i+1:]...)
+			break
+		}
+	}
+	
+	SaveRepos()
 }

@@ -12,8 +12,8 @@ import (
 
 func FindRepo(reponame string) (*github.Repository, error) {
 	ctx := context.Background()
-	client := config.General.GhClient
-	username := config.General.UserName
+	client := config.All.GhClient
+	username := config.All.UserName
 	repos, _, err := client.Repositories.List(ctx, username, nil)
 
 	if err != nil {
