@@ -1,12 +1,13 @@
 package routes
 
 import (
-	"motion/pkgs/config"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"motion/pkgs/config"
+	"motion/pkgs/models"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -63,7 +64,7 @@ func verifySignature(signature string, body, secret []byte) bool {
 	return hmac.Equal([]byte(expected), []byte(signature))
 }
 
-func deploy(repo config.RepoConfig) {
+func deploy(repo models.RepoConfig) {
 	fmt.Println("Executando deploy para", repo.Path)
 
 	port1 := strconv.Itoa(repo.Ports[0])

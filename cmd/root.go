@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		config.Init()
 		config.InitGitClient()
-		config.Engine = core.NewCore()
+		core.Docker = core.NewCore()
 	},
 }
 
