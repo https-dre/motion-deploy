@@ -2,22 +2,18 @@ package core
 
 import (
 	"fmt"
+	"motion/pkgs/models"
 
 	"github.com/docker/docker/client"
 )
 
 type DockerClient = *client.Client
 
+var Docker *Instance
+
 type Instance struct {
 	Client       DockerClient
-	Applications []CoreApplication
-}
-
-type CoreApplication struct {
-	CoreId  string
-	Name    string
-	Env     []string
-	ImageId string
+	Applications []models.CoreApplication
 }
 
 func NewDockerClient() DockerClient {
@@ -37,6 +33,6 @@ func NewCore() *Instance {
 	}
 }
 
-func (c *Instance) ListApplications() []CoreApplication {
-	return []CoreApplication{}
+func (c *Instance) ListApplications() []models.CoreApplication {
+	return []models.CoreApplication{}
 }
