@@ -89,7 +89,7 @@ var add = &cobra.Command{
 		fmt.Println("Repository downloaded!")
 		fmt.Println("Setting project in Docker...")
 
-		application, err := core.Docker.BuildAndRunService(new_repo.Path, new_repo.Name, new_repo.Name)
+		application, err := core.Engine.BuildAndRun(new_repo.Path, new_repo.Name, new_repo.Name)
 
 		if err != nil {
 			fmt.Println("Falha ao buildar e rodar o projeto")

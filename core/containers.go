@@ -11,7 +11,7 @@ import (
 )
 
 // builda a imagem local e sobe um container
-func (c *Instance) BuildAndRunService(projectPath, imageName, containerName string) (models.CoreApplication, error) {
+func (c *Instance) BuildAndRun(projectPath, imageName, containerName string) (models.CoreApplication, error) {
 	ctx := context.Background()
 
 	imageId, err := c.buildImage(ctx, projectPath, imageName)

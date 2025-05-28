@@ -9,11 +9,10 @@ import (
 
 type DockerClient = *client.Client
 
-var Docker *Instance
+var Engine CoreInstance
 
 type Instance struct {
-	Client       DockerClient
-	Applications []models.CoreApplication
+	Client DockerClient
 }
 
 func NewDockerClient() DockerClient {
@@ -25,7 +24,7 @@ func NewDockerClient() DockerClient {
 	return cli
 }
 
-func NewCore() *Instance {
+func NewDockerCore() CoreInstance {
 	cli := NewDockerClient()
 
 	return &Instance{
