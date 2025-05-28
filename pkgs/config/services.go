@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"motion/pkgs/models"
 
 	"github.com/spf13/viper"
 )
@@ -18,7 +19,7 @@ func InitServicesConfig() {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			fmt.Println("Arquivo services.yaml não encontrado. Criando novo arquivo...")
 			
-			servicesConfig.Set("repos", []RepoConfig{})
+			servicesConfig.Set("repos", []models.RepoConfig{})
 			
 			err := servicesConfig.SafeWriteConfigAs("services.yaml")
 			if err != nil {
@@ -42,7 +43,7 @@ func LoadRepos() {
 	
 	if err := servicesConfig.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			Repos = make([]RepoConfig, 0)
+			Repos = make([]models.RepoConfig, 0)
 			return
 		}
 		log.Fatalf("Erro ao ler services.yaml: %v", err)

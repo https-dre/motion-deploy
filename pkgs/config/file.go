@@ -3,36 +3,18 @@ package config
 import (
 	"fmt"
 	"log"
-	"motion/core"
 	"motion/pkgs/gitclient"
+	"motion/pkgs/models"
 
-	"github.com/google/go-github/v55/github"
 	"github.com/spf13/viper"
 )
 
-type RepoConfig struct {
-	Name   string   `json:"name"`
-	Branch string   `json:"branch"`
-	Path   string   `json:"path"`
-	Ports  [2]int   `json:"ports"`
-	Events []string `json:"events"`
-}
 
-type Config struct {
-	Secret      string                `mapstructure:"secret"`
-	CurrentPort string                `mapstructure:"current_port"`
-	Repos       map[string]RepoConfig `mapstructure:"repos"`
-	GhToken     string                `mapstructure:"github_token"`
-	UserName    string                `mapstructure:"username"`
-	GhClient    *github.Client        `mapstructure:"-"`
-}
 
-var All Config
-var Engine *core.Instance
-var Repos []RepoConfig
+var All models.Config
+var Repos []models.RepoConfig
 
 func Init() {
-	// Configuração principal (motion.yaml)
 	viper.SetConfigName("motion")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
@@ -58,7 +40,6 @@ func Init() {
 		log.Fatalf("Erro ao carregar config para struct: %v", err)
 	}
 
-	// Carrega os repositórios do services.yaml
 	LoadRepos()
 }
 
@@ -79,9 +60,8 @@ func Save() error {
 	return viper.WriteConfig()
 }
 
-func AddRepo(repo RepoConfig) {
+func AddRepo(repo models.RepoConfig) {
 	Repos = append(Repos, repo)
-	
 	SaveRepos()
 }
 
@@ -92,6 +72,5 @@ func RemoveRepo(repoName string) {
 			break
 		}
 	}
-	
 	SaveRepos()
 }

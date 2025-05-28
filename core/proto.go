@@ -1,6 +1,8 @@
 package core
 
+import "motion/pkgs/models"
+
 type CoreInstance interface {
-	ListApplications() []CoreApplication
+	ListApplications() []models.CoreApplication
 	BuildAndRunService(projectPath, imageName, containerName string) error
 }
